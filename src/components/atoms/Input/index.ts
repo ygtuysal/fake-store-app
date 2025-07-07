@@ -1,16 +1,16 @@
 import styled from 'styled-components';
 
 interface InputProps {
-  fullWidth?: boolean;
-  error?: boolean;
+  $fullWidth?: boolean;
+  $error?: boolean;
 }
 
 export const Input = styled.input<InputProps>`
-  width: ${({ fullWidth }) => (fullWidth ? '100%' : 'auto')};
+  width: ${({ $fullWidth }) => ($fullWidth ? '100%' : 'auto')};
   padding: 10px 16px;
   font-size: 16px;
-  border: 2px solid ${({ error, theme }) =>
-    error ? theme.colors.error : theme.colors.border};
+  border: 2px solid ${({ $error, theme }) =>
+    $error ? theme.colors.error : theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   background-color: ${({ theme }) => theme.colors.background};
   color: ${({ theme }) => theme.colors.text};
@@ -18,15 +18,15 @@ export const Input = styled.input<InputProps>`
   outline: none;
   
   &:focus {
-    border-color: ${({ error, theme }) =>
-      error ? theme.colors.error : theme.colors.primary};
-    box-shadow: 0 0 0 3px ${({ error, theme }) =>
-      error ? `${theme.colors.error}33` : `${theme.colors.primary}33`};
+    border-color: ${({ $error, theme }) =>
+      $error ? theme.colors.error : theme.colors.primary};
+    box-shadow: 0 0 0 3px ${({ $error, theme }) =>
+      $error ? `${theme.colors.error}33` : `${theme.colors.primary}33`};
   }
   
   &:hover:not(:disabled) {
-    border-color: ${({ error, theme }) =>
-      error ? theme.colors.error : theme.colors.gray[400]};
+    border-color: ${({ $error, theme }) =>
+      $error ? theme.colors.error : theme.colors.gray[400]};
   }
   
   &:disabled {
@@ -45,12 +45,14 @@ export const InputWrapper = styled.div`
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing.xs};
   width: 100%;
+  box-sizing: border-box;
 `;
 
 export const InputLabel = styled.label`
   font-size: 14px;
   font-weight: 500;
   color: ${({ theme }) => theme.colors.text};
+  margin-bottom: ${({ theme }) => theme.spacing.xs};
 `;
 
 export const InputError = styled.span`

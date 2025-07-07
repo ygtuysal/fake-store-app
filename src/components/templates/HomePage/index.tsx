@@ -71,8 +71,14 @@ const ContentContainer = styled.div`
 `;
 
 const FilterSidebar = styled.aside`
+  position: sticky;
+  top: 80px;
+  height: fit-content;
+  
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    order: -1;
+    position: relative;
+    top: 0;
+    margin-bottom: ${({ theme }) => theme.spacing.lg};
   }
 `;
 

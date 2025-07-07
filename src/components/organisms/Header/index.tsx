@@ -129,12 +129,6 @@ export const Header: React.FC = () => {
           <NavLink href="/" onClick={() => setIsMobileMenuOpen(false)}>
             Products
           </NavLink>
-          <NavLink href="/about" onClick={() => setIsMobileMenuOpen(false)}>
-            About
-          </NavLink>
-          <NavLink href="/contact" onClick={() => setIsMobileMenuOpen(false)}>
-            Contact
-          </NavLink>
           
           <CartButton>
             <FaShoppingCart size={24} />

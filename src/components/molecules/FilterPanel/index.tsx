@@ -5,18 +5,64 @@ import styled from 'styled-components';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Input, InputWrapper, InputLabel } from '@/components/atoms/Input';
 import { Button } from '@/components/atoms/Button';
+import { FaFilter, FaTimes } from 'react-icons/fa';
 
 interface FilterPanelProps {
   categories: string[];
 }
 
-const FilterContainer = styled.div`
+const FilterContainer = styled.div<{ $isOpen?: boolean }>`
   padding: ${({ theme }) => theme.spacing.lg};
   background-color: ${({ theme }) => theme.colors.gray[50]};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
+  width: 100%;
+  box-sizing: border-box;
   
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+    background-color: ${({ theme }) => theme.colors.background};
+    transform: translateX(${({ $isOpen }) => ($isOpen ? '0' : '-100%')});
+    transition: transform ${({ theme }) => theme.transitions.normal};
+    overflow-y: auto;
     padding: ${({ theme }) => theme.spacing.md};
+  }
+`;
+
+const MobileFilterButton = styled(Button)`
+  display: none;
+  
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    display: flex;
+    align-items: center;
+    gap: ${({ theme }) => theme.spacing.sm};
+    margin-bottom: ${({ theme }) => theme.spacing.md};
+  }
+`;
+
+const CloseButton = styled.button`
+  display: none;
+  position: absolute;
+  top: ${({ theme }) => theme.spacing.md};
+  right: ${({ theme }) => theme.spacing.md};
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: ${({ theme }) => theme.colors.text};
+  font-size: 24px;
+  
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    display: block;
+  }
+`;
+
+const FilterContent = styled.div`
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    margin-top: ${({ theme }) => theme.spacing.xl};
   }
 `;
 
@@ -62,9 +108,13 @@ const Checkbox = styled.input`
 `;
 
 const PriceInputsContainer = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: ${({ theme }) => theme.spacing.sm};
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing.md};
+`;
+
+const PriceInputWrapper = styled(InputWrapper)`
+  flex: 1;
 `;
 
 const ClearButton = styled(Button)`
@@ -78,6 +128,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({ categories }) => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     setSelectedCategory(searchParams.get('category') || '');
@@ -108,6 +159,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({ categories }) => {
     
     params.set('page', '1');
     router.push(`/?${params.toString()}`);
+    setIsOpen(false);
   };
 
   const clearFilters = () => {
@@ -117,63 +169,77 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({ categories }) => {
     params.delete('maxPrice');
     params.set('page', '1');
     router.push(`/?${params.toString()}`);
+    setIsOpen(false);
   };
 
   return (
-    <FilterContainer>
-      <FilterSection>
-        <SectionTitle>Category</SectionTitle>
-        <CategoryList>
-          {categories.map((category) => (
-            <CategoryItem key={category}>
-              <Checkbox
-                type="radio"
-                name="category"
-                value={category}
-                checked={selectedCategory === category}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-              />
-              {category}
-            </CategoryItem>
-          ))}
-        </CategoryList>
-      </FilterSection>
-
-      <FilterSection>
-        <SectionTitle>Price Range</SectionTitle>
-        <PriceInputsContainer>
-          <InputWrapper>
-            <InputLabel>Min</InputLabel>
-            <Input
-              type="number"
-              placeholder="0"
-              value={minPrice}
-              onChange={(e) => setMinPrice(e.target.value)}
-              min="0"
-              step="0.01"
-            />
-          </InputWrapper>
-          <InputWrapper>
-            <InputLabel>Max</InputLabel>
-            <Input
-              type="number"
-              placeholder="999"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
-              min="0"
-              step="0.01"
-            />
-          </InputWrapper>
-        </PriceInputsContainer>
-      </FilterSection>
-
-      <Button variant="primary" fullWidth onClick={applyFilters}>
-        Apply Filters
-      </Button>
+    <>
+      <MobileFilterButton onClick={() => setIsOpen(true)} variant="outline">
+        <FaFilter />
+        Filters
+      </MobileFilterButton>
       
-      <ClearButton variant="ghost" fullWidth onClick={clearFilters}>
-        Clear All
-      </ClearButton>
-    </FilterContainer>
+      <FilterContainer $isOpen={isOpen}>
+        <CloseButton onClick={() => setIsOpen(false)}>
+          <FaTimes />
+        </CloseButton>
+        
+        <FilterContent>
+          <FilterSection>
+            <SectionTitle>Category</SectionTitle>
+            <CategoryList>
+              {categories.map((category) => (
+                <CategoryItem key={category}>
+                  <Checkbox
+                    type="radio"
+                    name="category"
+                    value={category}
+                    checked={selectedCategory === category}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                  />
+                  {category}
+                </CategoryItem>
+              ))}
+            </CategoryList>
+          </FilterSection>
+
+          <FilterSection>
+            <SectionTitle>Price Range</SectionTitle>
+            <PriceInputsContainer>
+              <PriceInputWrapper>
+                <InputLabel>Min</InputLabel>
+                <Input
+                  type="number"
+                  placeholder="0"
+                  value={minPrice}
+                  onChange={(e) => setMinPrice(e.target.value)}
+                  min="0"
+                  step="0.01"
+                />
+              </PriceInputWrapper>
+              <PriceInputWrapper>
+                <InputLabel>Max</InputLabel>
+                <Input
+                  type="number"
+                  placeholder="999"
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(e.target.value)}
+                  min="0"
+                  step="0.01"
+                />
+              </PriceInputWrapper>
+            </PriceInputsContainer>
+          </FilterSection>
+
+          <Button variant="primary" fullWidth onClick={applyFilters}>
+            Apply Filters
+          </Button>
+          
+          <ClearButton variant="ghost" fullWidth onClick={clearFilters}>
+            Clear All
+          </ClearButton>
+        </FilterContent>
+      </FilterContainer>
+    </>
   );
 };
