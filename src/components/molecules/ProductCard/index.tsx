@@ -100,9 +100,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   return (
-    <Link href={`/products/${product.id}`} passHref legacyBehavior>
-      <a style={{ textDecoration: 'none' }}>
-        <StyledCard hoverable clickable>
+<Link href={`/products/${product.id}`} style={{ textDecoration: 'none' }}>
+  <StyledCard hoverable clickable>
         <ImageContainer>
           <StyledImage
             src={product.image}
@@ -127,7 +126,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <Button
             variant="primary"
             size="medium"
-            fullWidth
             onClick={handleAddToCart}
           >
             <FaShoppingCart size={16} />
@@ -135,7 +133,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </Button>
         </ButtonContainer>
               </StyledCard>
-      </a>
     </Link>
   );
 };

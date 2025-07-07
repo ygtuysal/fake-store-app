@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import styled from 'styled-components';
 import Image from 'next/image';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
+import Head from 'next/head';
 import { Product } from '@/types';
 import { Button } from '@/components/atoms/Button';
 import { Badge } from '@/components/atoms/Badge';
-import { Rating } from '@/components/atoms/Rating';
 import { useCart } from '@/contexts/CartContext';
 import { FaShoppingCart, FaArrowLeft, FaCheck } from 'react-icons/fa';
 import { generateBlurDataURL } from '@/lib/imageLoader';
+const Rating = dynamic(() => import('@/components/atoms/Rating'), { ssr: false });
 
 interface ProductDetailProps {
   product: Product;
@@ -41,11 +43,11 @@ const BackLink = styled(Link)`
 const ProductContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: ${({ theme }) => theme.spacing.xxl};
+  gap: 48px;
   
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
     grid-template-columns: 1fr;
-    gap: ${({ theme }) => theme.spacing.xl};
+    gap: 32px;
   }
 `;
 
@@ -152,84 +154,92 @@ const Divider = styled.hr`
   margin: ${({ theme }) => theme.spacing.lg} 0;
 `;
 
-export const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
+export const ProductDetail: React.FC<ProductDetailProps> = memo(({ product }) => {
   const { addToCart } = useCart();
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = useCallback(() => {
     addToCart(product);
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 3000);
-  };
+  }, [addToCart, product]);
 
   return (
-    <Container>
-      <BackLink href="/">
-        <FaArrowLeft size={16} />
-        Back to Products
-      </BackLink>
+    <>
+      <Head>
+        <link rel="preload" as="image" href={product.image} />
+      </Head>
 
-      <ProductContainer>
-        <ImageSection>
-          <StyledImage
-            src={product.image}
-            alt={product.title}
-            width={400}
-            height={400}
-            priority
-            placeholder="blur"
-            blurDataURL={generateBlurDataURL(400, 400)}
-            quality={90}
-          />
-        </ImageSection>
+      <Container>
+        <BackLink href="/">
+          <FaArrowLeft size={16} />
+          Back to Products
+        </BackLink>
 
-        <InfoSection>
-          <CategoryBadge variant="secondary" size="small">
-            {product.category}
-          </CategoryBadge>
+        <ProductContainer>
+          <ImageSection>
+            <StyledImage
+              src={product.image}
+              alt={product.title}
+              width={400}
+              height={400}
+              priority
+              placeholder="blur"
+              blurDataURL={generateBlurDataURL(400, 400)}
+              quality={90}
+            />
+          </ImageSection>
 
-          <Title>{product.title}</Title>
+          <InfoSection>
+            <CategoryBadge variant="secondary" size="small">
+              {product.category}
+            </CategoryBadge>
 
-          <Rating 
-            value={product.rating.rate} 
-            count={product.rating.count}
-            size="large"
-          />
+            <Title>{product.title}</Title>
 
-          <PriceSection>
-            <Price>${product.price.toFixed(2)}</Price>
-          </PriceSection>
-
-          <StockInfo>
-            <FaCheck color="#4caf50" />
-            In Stock - Ships within 24 hours
-          </StockInfo>
-
-          <Divider />
-
-          <Description>{product.description}</Description>
-
-          <ActionsSection>
-            <Button
-              variant="primary"
+            <Rating 
+              value={product.rating.rate} 
+              count={product.rating.count}
               size="large"
-              onClick={handleAddToCart}
-              fullWidth
-            >
-              <FaShoppingCart size={20} />
-              Add to Cart
-            </Button>
-            <Button variant="outline" size="large" fullWidth>
-              Buy Now
-            </Button>
-          </ActionsSection>
+            />
 
-          <SuccessMessage show={showSuccess}>
-            <FaCheck />
-            Product added to cart successfully!
-          </SuccessMessage>
-        </InfoSection>
-      </ProductContainer>
-    </Container>
+            <PriceSection>
+              <Price>${product.price.toFixed(2)}</Price>
+            </PriceSection>
+
+            <StockInfo>
+              <FaCheck color="#4caf50" />
+              In Stock - Ships within 24 hours
+            </StockInfo>
+
+            <Divider />
+
+            <Description>{product.description}</Description>
+
+            <ActionsSection>
+              <Button
+                variant="primary"
+                size="large"
+                onClick={handleAddToCart}
+                fullWidth
+              >
+                <FaShoppingCart size={20} />
+                Add to Cart
+              </Button>
+              <Button variant="outline" size="large" fullWidth>
+                Buy Now
+              </Button>
+            </ActionsSection>
+
+            <SuccessMessage show={showSuccess}>
+              <FaCheck />
+              Product added to cart successfully!
+            </SuccessMessage>
+          </InfoSection>
+        </ProductContainer>
+      </Container>
+    </>
   );
-};
+});
+
+ProductDetail.displayName = 'ProductDetail';
