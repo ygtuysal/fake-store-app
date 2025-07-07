@@ -17,17 +17,17 @@ export async function generateMetadata({
     const product = await getProduct(params.id);
     
     return {
-      title: `${product.title} - Fake Store`,
-      description: product.description,
+      title: `${product?.title} - Fake Store`,
+      description: product?.description,
       openGraph: {
-        title: product.title,
-        description: product.description,
+        title: product?.title,
+        description: product?.description,
         images: [
           {
-            url: product.image,
+            url: product?.image,
             width: 800,
             height: 800,
-            alt: product.title,
+            alt: product?.title,
           },
         ],
       },

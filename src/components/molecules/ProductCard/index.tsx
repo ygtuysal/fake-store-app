@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
@@ -10,6 +8,7 @@ import { Button } from '@/components/atoms/Button';
 import { Rating } from '@/components/atoms/Rating';
 import { useCart } from '@/contexts/CartContext';
 import { FaShoppingCart } from 'react-icons/fa';
+import { generateBlurDataURL } from '@/lib/imageLoader';
 
 interface ProductCardProps {
   product: Product;
@@ -110,7 +109,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             alt={product.title}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            priority={false}
+            loading="lazy"
+            placeholder="blur"
+            blurDataURL={generateBlurDataURL(300, 300)}
+            quality={85}
           />
         </ImageContainer>
         <Content>

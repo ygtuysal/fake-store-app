@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Image from 'next/image';
@@ -10,6 +8,7 @@ import { Badge } from '@/components/atoms/Badge';
 import { Rating } from '@/components/atoms/Rating';
 import { useCart } from '@/contexts/CartContext';
 import { FaShoppingCart, FaArrowLeft, FaCheck } from 'react-icons/fa';
+import { generateBlurDataURL } from '@/lib/imageLoader';
 
 interface ProductDetailProps {
   product: Product;
@@ -178,6 +177,9 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
             width={400}
             height={400}
             priority
+            placeholder="blur"
+            blurDataURL={generateBlurDataURL(400, 400)}
+            quality={90}
           />
         </ImageSection>
 
