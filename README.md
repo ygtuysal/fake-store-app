@@ -163,9 +163,18 @@ The application uses the [Fake Store API](https://fakestoreapi.com/):
 - `GET /products/categories` - Get all categories
 - `GET /products/category/:category` - Get products by category
 
-## 🎨 Styling
+## 🎨 Styling & Theme
 
 The project uses Styled Components with a custom theme:
+
+## Light/Dark Mode Support
+
+Automatic Detection: Detects system color scheme preference
+Manual Toggle: Users can switch between themes using the toggle in header
+Persistent Choice: Theme preference saved in localStorage
+Smooth Transitions: All theme changes are animated
+
+## Theme Structure
 
 ```typescript
 const theme = {
