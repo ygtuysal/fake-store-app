@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import Link from 'next/link';
 import { useCart } from '@/contexts/CartContext';
 import { BadgeNumber } from '@/components/atoms/Badge';
+import { ThemeToggle } from '@/components/molecules/ThemeToggle';
 import { FaShoppingCart, FaBars, FaTimes } from 'react-icons/fa';
 
 const HeaderWrapper = styled.header`
@@ -73,6 +74,12 @@ const NavLink = styled(Link)`
   }
 `;
 
+const NavActions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing.md};
+`;
+
 const CartButton = styled.button`
   position: relative;
   background: none;
@@ -130,12 +137,15 @@ export const Header: React.FC = () => {
             Products
           </NavLink>
           
-          <CartButton>
-            <FaShoppingCart size={24} />
-            {totalItems > 0 && (
-              <CartBadge variant="error">{totalItems}</CartBadge>
-            )}
-          </CartButton>
+          <NavActions>
+            <ThemeToggle variant="simple" />
+            <CartButton>
+              <FaShoppingCart size={24} />
+              {totalItems > 0 && (
+                <CartBadge variant="error">{totalItems}</CartBadge>
+              )}
+            </CartButton>
+          </NavActions>
         </Nav>
         
         <MobileMenuButton onClick={toggleMobileMenu}>

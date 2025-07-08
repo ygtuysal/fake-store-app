@@ -1,16 +1,13 @@
 'use client';
 
 import React from 'react';
-import { ThemeProvider } from 'styled-components';
-import { GlobalStyles } from '@/styles/global';
-import { theme } from '@/styles/theme';
 import { CartProvider } from '@/contexts/CartContext';
 import { Header } from '@/components/organisms/Header';
+import { ThemeProvider } from '@/theme/ThemeContext';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider theme={theme}>
-      <GlobalStyles />
+    <ThemeProvider>
       <CartProvider>
         <Header />
         <main>{children}</main>

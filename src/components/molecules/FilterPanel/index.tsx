@@ -13,7 +13,7 @@ interface FilterPanelProps {
 
 const FilterContainer = styled.div<{ $isOpen?: boolean }>`
   padding: ${({ theme }) => theme.spacing.lg};
-  background-color: ${({ theme }) => theme.colors.gray[50]};
+  background-color: ${({ theme }) => theme.colors.gray[100]};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   width: 100%;
   box-sizing: border-box;
@@ -215,6 +215,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({ categories }) => {
                   onChange={(e) => setMinPrice(e.target.value)}
                   min="0"
                   step="0.01"
+                  $fullWidth
                 />
               </PriceInputWrapper>
               <PriceInputWrapper>
@@ -226,6 +227,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({ categories }) => {
                   onChange={(e) => setMaxPrice(e.target.value)}
                   min="0"
                   step="0.01"
+                  $fullWidth
                 />
               </PriceInputWrapper>
             </PriceInputsContainer>
