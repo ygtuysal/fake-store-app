@@ -75,8 +75,9 @@ Complex components:
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/ygtuysal/fake-store-app.git
 cd fake-store-app
+
 ```
 
 2. Install dependencies:
@@ -230,3 +231,9 @@ Kategori	Skor
 ♿ Erişilebilirlik	96
 🔐 Best Practices	100
 🔍 SEO	100
+
+Version History
+
+v0.3.0 - Dark/Light theme support added
+v0.2.0 - Unit tests implemented (>60% coverage)
+v0.1.0 - Initial release with core features
